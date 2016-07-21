@@ -12,12 +12,13 @@ import java.util.concurrent.TimeUnit;
 public class MainTest {
     private static WebDriver driver;
     private MailBoxPage mailBoxPage;
+    private final static int timeToWait = 5;
 
 
     @BeforeClass
     public static void setUp() {
         driver = new FirefoxDriver();
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(timeToWait, TimeUnit.SECONDS);
     }
 
     @Test
@@ -28,18 +29,7 @@ public class MainTest {
         mailBoxPage.setMailAddress("lexman2@ya.ru");
         mailBoxPage.setSubject("Test letter");
         mailBoxPage.setMainText("This is a test letter");
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        mailBoxPage.sendLetter();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        mailBoxPage.clickSendLetter();
     }
 
     @AfterClass

@@ -4,15 +4,13 @@ import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
-public class MailRuLoginPage {
+
+public class MailRuLoginPage extends WebPage {
     private WebDriver webDriver;
     private final String URL = "https://mail.ru/";
-    private final By loginButtonLocator = By.id("mailbox__auth__button");
+    private final By mailBoxBody = By.id("ScrollBody");
 
     @FindBy (id = "mailbox__login")
     private WebElement loginInput;
@@ -23,10 +21,9 @@ public class MailRuLoginPage {
     @FindBy (id = "mailbox__auth__button")
     private WebElement loginButton;
 
-
     public MailRuLoginPage(WebDriver webDriver) {
+        super(webDriver);
         this.webDriver = webDriver;
-        PageFactory.initElements(webDriver,this);
         if (webDriver == null ){
             webDriver =new FirefoxDriver();
         }
@@ -36,34 +33,22 @@ public class MailRuLoginPage {
     }
 
     public void typeLogin(String login) {
-        loginInput.clear();
-        loginInput.sendKeys(login);
+        typeText(loginInput,login);
     }
 
     public void typePassword(String password) {
-        passwordInput.clear();
-        passwordInput.sendKeys(password);
+        typeText(passwordInput,password);
     }
 
     public boolean clickLoginButton() {
-        try {
-            loginButton.click();
-            return true;
-        } catch (WebDriverException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return clickWebElement(loginButton);
     }
 
     public MailBoxPage submitLoginPassword(String login, String password){
         typeLogin(login);
         typePassword(password);
         Assert.assertTrue(clickLoginButton());
-        try {
-            new WebDriverWait(webDriver,5).until(ExpectedConditions.invisibilityOfElementLocated(loginButtonLocator));
-        } catch (TimeoutException e) {
-            return null;
-        }
+        Assert.assertTrue(waitUntilElementExists(mailBoxBody));
         Assert.assertTrue(isURLContains("messages/inbox"));
         return new MailBoxPage(webDriver);
     }
@@ -71,11 +56,5 @@ public class MailRuLoginPage {
     public boolean isURLContains(String text) {
        return webDriver.getCurrentUrl().contains(text);
     }
-
-
-
-
-
-
 
 }
