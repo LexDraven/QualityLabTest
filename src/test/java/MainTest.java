@@ -24,17 +24,13 @@ public class MainTest {
     @Test
     public void testLoginToMailRu() {
         MailRuLoginPage loginPage = new MailRuLoginPage(driver);
-        Assert.assertNotNull(mailBoxPage = loginPage.submitLoginPassword("lex.draven@mail.ru","Q123#@!w"));
-        mailBoxPage.clickWriteLetterButton();
-        mailBoxPage.setMailAddress("lexman2@ya.ru");
-        mailBoxPage.setSubject("Test letter");
-        mailBoxPage.setMainText("This is a test letter");
-        mailBoxPage.clickSendLetter();
+        Assert.assertNotNull(mailBoxPage = loginPage.submitLoginPassword("lex.draven@mail.ru", "Q123#@!w"));
+        Assert.assertTrue(mailBoxPage.sendMail("lexman2@ya.ru", "Test letter", "This is the test letter"));
     }
 
     @AfterClass
     public static void tearDown() {
-        if (driver!=null) {
+        if (driver != null) {
             driver.quit();
         }
     }

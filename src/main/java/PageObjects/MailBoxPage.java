@@ -9,11 +9,13 @@ import org.openqa.selenium.support.FindBy;
 
 public class MailBoxPage extends WebPage{
     private WebDriver webDriver;
+    private By messageSentSuccess = By.className("message-sent__title");
+    private By letterBody = By.name("Compose");
 
     @FindBy(xpath = "//div[@class='b-toolbar__item']/child::a")
     private WebElement writeLetterButton;
 
-    @FindBy (xpath = "//div[contains(@class,'labels_focused')]/descendant::textarea[@data-original-name='To']")
+    @FindBy (xpath = "//textarea[@data-original-name='To']")
     private WebElement addressToInput;
 
     @FindBy (name = "Subject")
@@ -56,7 +58,18 @@ public class MailBoxPage extends WebPage{
         if (!clickWebElement(sendLetterButton)) {
             return false;
         }
-        return waitUntilElementExists(By.xpath("//div[@class='message-sent__title']"));
+        return waitUntilElementExists(messageSentSuccess);
+    }
+
+    public boolean sendMail(String address, String subject, String text) {
+        if (!clickWriteLetterButton()) {
+            return false;
+        }
+        waitUntilElementExists(letterBody);
+        setMailAddress(address);
+        setSubject(subject);
+        setMainText(text);
+        return clickSendLetter();
     }
 
 

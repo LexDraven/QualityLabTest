@@ -49,12 +49,7 @@ public class MailRuLoginPage extends WebPage {
         typePassword(password);
         Assert.assertTrue(clickLoginButton());
         Assert.assertTrue(waitUntilElementExists(mailBoxBody));
-        Assert.assertTrue(isURLContains("messages/inbox"));
         return new MailBoxPage(webDriver);
-    }
-
-    public boolean isURLContains(String text) {
-       return webDriver.getCurrentUrl().contains(text);
     }
 
 }
